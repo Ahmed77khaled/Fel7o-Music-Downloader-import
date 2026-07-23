@@ -22,12 +22,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahmedelfalah/fel7o.git"
+    "url": "git+https://github.com/Ahmed77khaled/Fel7o-Music-Downloader-import.git"
   },
   "bugs": {
-    "url": "https://github.com/ahmedelfalah/fel7o/issues"
+    "url": "https://github.com/Ahmed77khaled/Fel7o-Music-Downloader-import/issues"
   },
-  "homepage": "https://github.com/ahmedelfalah/fel7o#readme",
+  "homepage": "https://github.com/Ahmed77khaled/Fel7o-Music-Downloader-import#readme",
   "devDependencies": {
     "electron": "^31.0.0",
     "electron-builder": "^24.13.3",

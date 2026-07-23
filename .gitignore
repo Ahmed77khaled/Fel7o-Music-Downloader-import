@@ -1,3 +1,7 @@
+# =============================================
+# Fel7o — .gitignore
+# =============================================
+
 # Node & Electron dependencies
 node_modules/
 npm-debug.log*
@@ -9,13 +13,23 @@ pnpm-debug.log*
 dist/
 release/
 build/
+out/
+coverage/
 *.exe
 *.msi
+# Exclude zip archives globally EXCEPT bin/ffmpeg.zip (required by postinstall)
 *.zip
+!bin/ffmpeg.zip
 
-# Binary overrides (keep git clean, binaries extracted via postinstall if missing)
+# Binary overrides
+# ffmpeg.zip is kept (postinstall extracts it to ffmpeg.exe)
+# ffmpeg.exe is excluded — too large for GitHub (127 MB > 100 MB limit)
 bin/ffmpeg.exe
-bin/ffmpeg.zip
+
+# Logs
+*.log
+*.tmp
+*.cache
 
 # OS metadata
 .DS_Store
