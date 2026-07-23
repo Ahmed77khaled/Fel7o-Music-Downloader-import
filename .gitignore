@@ -17,9 +17,8 @@ out/
 coverage/
 *.exe
 *.msi
-# Exclude zip archives globally EXCEPT bin/ffmpeg.zip (required by postinstall)
+# Exclude zip archives globally (binaries stay local, not versioned)
 *.zip
-!bin/ffmpeg.zip
 
 # Binary overrides
 # ffmpeg.zip is kept (postinstall extracts it to ffmpeg.exe)
