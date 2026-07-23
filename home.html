@@ -1,0 +1,345 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Fel7o - Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="./shared/tailwind-config.js"></script>
+<!-- ★ Global atmospheric background -->
+<script src="./shared/global-bg.js"></script>
+<style>
+    .liquid-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .liquid-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(168, 232, 255, 0.2);
+        transform: translateY(-2px);
+    }
+    .glass-panel {
+        background: rgba(14, 20, 23, 0.8);
+        backdrop-filter: blur(12px);
+    }
+    @keyframes breathe {
+        0%, 100% { transform: scale(1); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+    }
+    .animate-breathe {
+        animation: breathe 3s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 10px rgba(0, 212, 255, 0.3); opacity: 1; }
+        50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.6); opacity: 0.9; }
+    }
+    .animate-pulse-glow {
+        animation: pulse-glow 3s ease-in-out infinite;
+    }
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+    .shimmer-progress {
+        background: linear-gradient(90deg, 
+            rgba(0, 212, 255, 0) 0%, 
+            rgba(255, 255, 255, 0.3) 50%, 
+            rgba(0, 212, 255, 0) 100%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite linear;
+    }
+    .fill-icon {
+        font-variation-settings: 'FILL' 1;
+    }
+</style>
+</head>
+<body class="selection:bg-primary-container selection:text-on-primary-container min-h-screen">
+<!-- Background provided by shared/global-bg.js -->
+<!-- Header / Navigation Section -->
+<header class="flex flex-col border-b border-outline-variant/30 glass-panel sticky top-0 z-20">
+<div class="px-8 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3 shrink-0">
+<div class="size-10 rounded-full overflow-hidden border border-accent-cyan/20">
+<img alt="Fel7o Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm4ggar5QS24imyMbLjdy6BCL2kN9V_xCN31NrK8mXo-PYL2HJc7HjaZWW3lA_PF2yYqaJO_eHzax8a4WxFw8fPvn8oF6M5gMnxkn1ef43EEDFu6yvq6wZzpJN2h9GwgT3Vw2MSnnxWI1l5TePpGNh3r19WWiLCACW0utK6L1s0sHhpsnrIcLidLbh3TRd20ixOb9G1tepwAksjWy9p_D3bqlI4tb4cauaPbbGU_n0tHTDqAp_8RUud9Qw1eNNK3il1twwfnFQ4-1C">
+</div>
+<span class="text-xl font-black tracking-tighter text-white">FEL7O</span><nav class="flex items-center gap-2 ml-4">
+<button class="px-6 py-2.5 rounded-full bg-accent-cyan text-on-primary text-sm font-bold transition-all duration-300 animate-pulse-glow">
+                Home
+            </button>
+<button class="px-6 py-2.5 rounded-full hover:bg-surface-container text-on-surface text-sm font-bold transition-all duration-300">
+                History
+            </button>
+</nav>
+</div>
+
+<div class="flex items-center gap-4 shrink-0">
+<button class="size-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-all duration-300">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="size-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-all duration-300">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-px h-6 bg-outline-variant/50"></div>
+<div class="flex items-center gap-3">
+<img alt="User Avatar" class="size-10 rounded-full border border-white/10 hover:ring-2 hover:ring-primary transition-all duration-300 cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbLbd3ZE-t9u521rzeDwFLQYCsQ9hOsRqR7Ek32O6R-i6XahH2YCpgvIiL7x38mZAfY09AvVjCVuOlwDuaJycR-qz-L0rVn7dJqD_aHdvrt9sZ6RelDljg-mfGxPpO2bCNomx6-QyNSt82xYfshcdfwEeiGRD817GUL6ANy3g9_iwVaCRyODu5Sn71f_BrUGPKPXNgHYVkeVMrJjnk964qZfh-ktkuKmyfcczXxbWj0inDz9qJOUY0pQLy_vXnLh_qeH_bHnt8dg">
+</div>
+</div>
+</div>
+</header>
+<main class="pt-12 pb-24 md:pb-12 px-lg min-h-screen">
+<div class="max-w-6xl mx-auto space-y-gutter">
+<!-- HEADER SECTION -->
+<div class="flex flex-col md:flex-row justify-between items-end gap-md animate-fade-in-up">
+<div>
+<h2 class="font-display-lg text-headline-xl md:text-display-lg font-bold text-on-surface tracking-tight">Active Sessions</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage your high-fidelity music stream and downloads.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-2 bg-surface-container-high border border-white/10 rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container-highest transition-all duration-300 flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">pause</span> Pause All
+                </button>
+<button class="px-md py-2 bg-gradient-to-r from-primary-container to-secondary-container font-label-md text-label-md rounded-lg shadow-lg hover:brightness-110 active:scale-95 transition-all duration-300 flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">add</span> New Download
+                </button>
+</div>
+</div>
+<!-- STATS GRID -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter animate-fade-in-up" style="animation-delay: 0.1s;">
+<div class="liquid-card p-lg rounded-2xl group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,212,255,0.15)]">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-primary-container/10">
+<span class="material-symbols-outlined text-primary-container">speed</span>
+</div>
+<span class="font-caption text-caption text-primary bg-primary/10 px-2 py-0.5 rounded-full">+12%</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Download Speed</p>
+<h3 class="font-display-xl text-headline-xl font-bold text-on-surface my-2">124.5 <span class="text-body-md font-normal text-on-surface-variant">MB/s</span></h3>
+<div class="w-full h-14 mt-4">
+<svg class="w-full h-full overflow-visible" id="networkChart" viewBox="0 0 320 60">
+<defs>
+<linearGradient id="lineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#00D4FF"></stop>
+<stop offset="100%" stop-color="#7C3AED"></stop>
+</linearGradient>
+<filter id="glow">
+<feGaussianBlur result="blur" stdDeviation="3"></feGaussianBlur>
+<feMerge>
+<feMergeNode in="blur"></feMergeNode>
+<feMergeNode in="SourceGraphic"></feMergeNode>
+</feMerge>
+</filter>
+</defs>
+<g opacity=".08"><line stroke="white" x1="0" x2="320" y1="15" y2="15"></line><line stroke="white" x1="0" x2="320" y1="30" y2="30"></line><line stroke="white" x1="0" x2="320" y1="45" y2="45"></line></g>
+<path d="M 0 45.367782319010345 L 0 45.367782319010345 L 10 50 L 20 49.56001051000663 L 30 49.219381668637254 L 40 49.479360695252396 L 50 46.988784058028344 L 60 45.205267175519936 L 70 50 L 80 50 L 90 50 L 100 50 L 110 46.77105263428931 L 120 41.803216912627356 L 130 42.190256335591556 L 140 43.641681545911126 L 150 45.28020863238958 L 160 45.75974391630878 L 170 47.31398208371297 L 180 43.2546106628733 L 190 43.4445950892942 L 200 48.739320620969984 L 210 48.51447434579091 L 220 45.73651300833579 L 230 50 L 240 45.084511538823484 L 250 47.42111876480138 L 260 42.18997365921031 L 270 45.88670381925727 L 280 44.101570732452096 L 290 42.84042771268715 L 300 43.3910136838403 L 310 38.144458129578744" fill="none" filter="url(#glow)" id="networkPath" stroke="url(#lineGradient)" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+</div>
+</div>
+<div class="liquid-card p-lg rounded-2xl group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,212,255,0.15)]">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-secondary-container/10">
+<span class="material-symbols-outlined text-secondary">cloud_done</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Completed Today</p>
+<h3 class="font-display-xl text-headline-xl font-bold text-on-surface my-2">48 <span class="text-body-md font-normal text-on-surface-variant">Tracks</span></h3>
+<div class="mt-6 flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-variant overflow-hidden hover:z-10 hover:scale-110 transition-all duration-300 cursor-pointer">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb2guwVa3h1b1ma9r-gfgCx0aC_PZSav8HE5yH8kwQRk-PJ4HHFawctqMEy3X5M2SYc_6q4De2ndEatuDzCd4HMEsKaSTS98ylE5F00PdeNCgFa1Q2cP7H371vYI0bl_QdGGSL-KF_QncrpV_n6vKLIf2kR4HA0TzWSME9bjI8L4ku_2uTPp3UEmumCZNtGJ1CYQr5qRf1t3qqMx3r1gEOW7dZ1mb6BkLnuv5JuDsjZl9IGQd7kHSKzJDAAJYB-h_HZYLUKH5yyw">
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-variant overflow-hidden hover:z-10 hover:scale-110 transition-all duration-300 cursor-pointer">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChWHeJluCVZrX8_qHbGbkOjtoPXiK3fm2Z0sdl9ooBcjFvIceAbCrRI1eUrN3rps0wKiKPXwLiVP6xJX1uo5jbOIl6Zmqg6_mXWguXZwC_BbMOwGyvyF_4tosv3kmPKdWxlLhII4EKAEsUIqTmrnGRkfDZPdtp2MRDrIlMH9VJx_WWdGnJ1PipChRKQpqHQU4bLmirLG3dzqcy-tRLdbda7pgT7E5pK_k8K4jhBP8XmcWETlt4R9JAF_YTl6WX1klTy-2Qi5oAVA">
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-variant overflow-hidden hover:z-10 hover:scale-110 transition-all duration-300 cursor-pointer">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdD-_4TFgWM4EE0K3osVH1Y_qTNetOZfO7e0gMuSERcJacADS_NQDNIGoIieVBPoUsrOdosCwiCqAKuNCRD6XX10L6yD4VKhUQ2GqhWvDG6wVh4P4xCsuoSrSLh6B1asdIjlLuLGCQ4XEr_MV7kTFG7jlXImQizTvXrh9WdL3UqI52yZ6xbe612wQFu7kmQn4DGM7NWRhGsy6fjw_E9fMUr5ggTqEi1etyR_hOOAj8P3Mfmek_BOZksq0bJRPWSyeOdr9QhgrS6w">
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-container-highest flex items-center justify-center font-label-md text-[10px] text-on-surface-variant hover:scale-110 transition-all duration-300 cursor-pointer">
+                        +45
+                    </div>
+</div>
+</div>
+<div class="liquid-card p-lg rounded-2xl group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,212,255,0.15)]">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-tertiary-container/10">
+<span class="material-symbols-outlined text-tertiary">pending</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Active Queue</p>
+<h3 class="font-display-xl text-headline-xl font-bold text-on-surface my-2">12 <span class="text-body-md font-normal text-on-surface-variant">Items</span></h3>
+<div class="mt-6 font-body-sm text-body-sm text-on-surface-variant italic">
+                    Estimated completion: <span class="text-on-surface font-semibold">14m 20s</span>
+</div>
+</div>
+</div>
+<!-- DOWNLOAD QUEUE -->
+<div class="space-y-md">
+<h4 class="font-headline-lg text-headline-lg font-bold text-on-surface flex items-center gap-2 animate-fade-in-up" style="animation-delay: 0.2s;">
+                Queue 
+                <span class="text-body-sm font-normal text-on-surface-variant bg-surface-container px-2 py-0.5 rounded border border-white/5">Auto-Resume On</span>
+</h4>
+<div class="flex flex-col gap-sm animate-fade-in-up" style="animation-delay: 0.3s;">
+<!-- Card 1: Downloading -->
+<div class="liquid-card p-md rounded-xl flex flex-col md:flex-row items-center gap-md transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(0,212,255,0.1)] group">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 relative group">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8PIZ9XjPQN4x3wpYhHS_RpuVYQQm8ewIeIgq9IXkG_TwXdk9oNbO3f32HgMQnS4RyHmyPbs1iqgZ9P4rZKFslC3BIV_22Ur8dwmmk2C5pJ5NWg3s5Oa8ZaN1_PVweXs3koNSOKx9pR_2c0S1kdSWOZER6SQtdplQQzTvcbUOUuu63ecnslz395eX7-hO8tY0-hN_OL4WS5rK3zJ-CbEa_mUw1bmwa8ktLhVLb0K3rZs0it8kYqFxHvJcnXxerNhsjdO0qMoFUFA">
+<div class="absolute inset-0 bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container animate-breathe fill-icon">downloading</span>
+</div>
+</div>
+<div class="flex-1 w-full">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h5 class="font-body-lg text-body-lg font-bold text-on-surface">Waves (Official Music Video)</h5>
+<p class="font-caption text-caption text-on-surface-variant">FLAC • 4K UHD • 1.2 GB</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-primary-container">72%</span>
+<p class="font-caption text-caption text-on-surface-variant">12.4 MB/s</p>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden relative">
+<div class="absolute top-0 left-0 h-full w-[72%] bg-gradient-to-r from-primary-container to-secondary-container relative overflow-hidden" id="active-progress-bar">
+<div class="absolute inset-0 shimmer-progress"></div>
+</div>
+</div>
+</div>
+<div class="flex gap-xs">
+<button class="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined">pause</span>
+</button>
+<button class="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant hover:text-error transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Completed -->
+<div class="liquid-card p-md rounded-xl flex flex-col md:flex-row items-center gap-md transition-all duration-300 hover:scale-[1.01] group">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAos8dFOhr3bygP0QBjQnANdiiWcj2o6U2pZ69CnE3eAwOzIaVbSEEBHD969ww71Oz5QjbT0FD5lkjY5eo_udyu3H9TEtB0nxHqF-h5dbI8hopOllRr1SvayNuaIhqJ7toYpxprMl_YS4uXDy3wws5KZqHvjzViRvAWjc06yR2fRxy7R8s8_jZ5MAn3JUF3YdDdAnE2DJG7QEygSL73BKtvruYVohVyBQjOPRKMc7WBr6bYGz5m7Ugbrc_rcFur9nTs5Wu6gKc1w">
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white">play_arrow</span>
+</div>
+</div>
+<div class="flex-1 w-full">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h5 class="font-body-lg text-body-lg font-bold text-on-surface">Alan Walker - Faded (Remix)</h5>
+<p class="font-caption text-caption text-on-surface-variant">MP3 320kbps • 8.4 MB</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-sm fill-icon">check_circle</span>
+<span class="font-label-md text-label-md text-primary-container">Completed</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-primary-container/20 rounded-full"></div>
+</div>
+<div class="flex gap-xs">
+<button class="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant hover:text-primary transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined">folder_open</span>
+</button>
+<button class="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant hover:text-on-surface transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Queued -->
+<div class="liquid-card p-md rounded-xl flex flex-col md:flex-row items-center gap-md opacity-60 hover:opacity-100 transition-all duration-300 hover:scale-[1.01] group">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 grayscale group-hover:grayscale-0 transition-all duration-500">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBslKJC1uqK5SlYHuPkKqz5LqFGC0tZXLvjMRVKd6-VXjh3KbpzGYz-mbBjDOhPS6KX6oKBW2IDvj9mf0SvAWFlkUVom4JZMwtpasStobjyKI6AOZZlqu5vFahWgOLao8wRFtl2TUA-ld7tGIhM2UTYDCcHohGte6DhyXWz9c24mtE-jvqdcssNvS-3dJD0DFZg-XTSuoN_t8kHMEVWEL4f8EnB8OMfUH8D-xKyBxSyt6xpG4EVv6FUt8_NiYLzSoY24hPDto6ViA">
+</div>
+<div class="flex-1 w-full">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h5 class="font-body-lg text-body-lg font-bold text-on-surface">The Journey: 4K Documentary</h5>
+<p class="font-caption text-caption text-on-surface-variant">MP4 • 4K HDR • 4.5 GB</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-on-surface-variant">Queued</span>
+<p class="font-caption text-caption text-on-surface-variant">Waiting for slot...</p>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full"></div>
+</div>
+<div class="flex gap-xs">
+<button class="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant hover:text-primary transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined">vertical_align_top</span>
+</button>
+<button class="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant hover:text-error transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- FOOTER INFO -->
+<div class="pt-xl border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-md animate-fade-in-up" style="animation-delay: 0.4s;">
+<p class="font-caption text-caption text-on-surface-variant">© 2026 Fel7o. Precision Engineered for Sonic Perfection.</p>
+<div class="flex gap-lg">
+<a class="font-caption text-caption text-on-surface-variant hover:text-primary transition-all duration-300" href="#">Privacy Policy</a>
+<a class="font-caption text-caption text-on-surface-variant hover:text-primary transition-all duration-300" href="#">API Status</a>
+<a class="font-caption text-caption text-on-surface-variant hover:text-primary transition-all duration-300" href="#">Contact Support</a>
+</div>
+</div>
+</div>
+</main>
+<!-- MOBILE BOTTOM NAV -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container/90 backdrop-blur-xl border-t border-white/10 flex items-center justify-around z-50">
+<button class="flex flex-col items-center text-primary active:scale-90 transition-all duration-300">
+<span class="material-symbols-outlined fill-icon">home</span>
+<span class="text-[10px] uppercase font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-300">
+<span class="material-symbols-outlined">bolt</span>
+<span class="text-[10px] uppercase">Trending</span>
+</button>
+<div class="w-12 h-12 -mt-10 bg-primary-container rounded-full flex items-center justify-center shadow-lg text-on-primary active:scale-90 transition-all duration-300 cursor-pointer">
+<span class="material-symbols-outlined">add</span>
+</div>
+<button class="flex flex-col items-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-300">
+<span class="material-symbols-outlined">download_done</span>
+<span class="text-[10px] uppercase">Library</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-300">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] uppercase">Profile</span>
+</button>
+</div>
+<!-- Network Chart Animation (kept — this is UI logic, not background) -->
+<script>
+// Network Chart Animation
+(function() {
+  const path = document.getElementById("networkPath");
+  if (!path) return;
+  const points = [];
+  for(let i=0;i<32;i++){
+      points.push(30 + Math.random()*20);
+  }
+  function draw(){
+      points.shift();
+      const last = points[points.length-1];
+      let next = last + (Math.random()-0.5)*12;
+      next=Math.max(10,Math.min(50,next));
+      points.push(next);
+      let d=`M 0 ${points[0]}`;
+      points.forEach((y,i)=>{
+          d+=` L ${i*10} ${y}`;
+      });
+      path.setAttribute("d",d);
+  }
+  draw();
+  setInterval(draw,180);
+})();
+</script>
+
+
+
+
+</body></html>

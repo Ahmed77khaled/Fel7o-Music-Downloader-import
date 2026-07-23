@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fel7o - Download History</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="./shared/tailwind-config.js"></script>
+<!-- ★ Global atmospheric background -->
+<script src="./shared/global-bg.js"></script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* background handled by global-bg.js */
+            color: #dde3e7;
+        }
+        .glass-panel {
+            background: rgba(26, 33, 35, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .media-card:hover .hover-overlay {
+            opacity: 1;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .custom-shadow {
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen overflow-hidden">
+
+<!-- Background provided by shared/global-bg.js -->
+
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+<!-- Background Animation Layer (now handled above) -->
+<!-- Header / Navigation Section -->
+<header class="flex flex-col border-b border-outline-variant/30 glass-panel sticky top-0 z-20">
+<div class="px-8 py-4 flex items-center justify-between gap-8">
+<!-- Logo Section -->
+<div class="flex items-center gap-3 shrink-0">
+<div class="size-10 rounded-full overflow-hidden border border-accent-cyan/20">
+<img class="w-full h-full object-cover" data-alt="A cinematic studio portrait logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm4ggar5QS24imyMbLjdy6BCL2kN9V_xCN31NrK8mXo-PYL2HJc7HjaZWW3lA_PF2yYqaJO_eHzax8a4WxFw8fPvn8oF6M5gMnxkn1ef43EEDFu6yvq6wZzpJN2h9GwgT3Vw2MSnnxWI1l5TePpGNh3r19WWiLCACW0utK6L1s0sHhpsnrIcLidLbh3TRd20ixOb9G1tepwAksjWy9p_D3bqlI4tb4cauaPbbGU_n0tHTDqAp_8RUud9Qw1eNNK3il1twwfnFQ4-1C"/>
+</div>
+<span class="text-xl font-black tracking-tighter text-white">FEL7O</span>
+</div>
+<!-- Main Navigation Links -->
+<nav class="flex items-center gap-1">
+<button class="px-6 py-2.5 rounded-full hover:bg-surface-container text-on-surface text-sm font-bold transition-colors">Home</button>
+<button class="px-6 py-2.5 rounded-full bg-accent-cyan text-on-primary text-sm font-bold transition-colors">History</button>
+</nav>
+<!-- Search & Filtering Area -->
+<div class="flex items-center gap-4 flex-1 max-w-2xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-accent-cyan transition-colors">search</span>
+<input class="w-full bg-surface-container-high/50 border-none rounded-full py-2.5 pl-12 pr-6 text-sm focus:ring-1 focus:ring-accent-cyan transition-all text-on-surface placeholder:text-on-surface-variant" placeholder="Search in history..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 rounded-full hover:bg-surface-container text-on-surface text-xs font-medium transition-colors">Video</button>
+<button class="px-4 py-2 rounded-full hover:bg-surface-container text-on-surface text-xs font-medium transition-colors">Audio</button>
+<button class="px-4 py-2 rounded-full hover:bg-surface-container text-on-surface text-xs font-medium transition-colors">Collections</button>
+</div>
+</div>
+<!-- Actions & Profile -->
+<div class="flex items-center gap-4 shrink-0">
+<button class="size-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="size-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-[1px] h-6 bg-outline-variant/50"></div>
+<div class="flex items-center gap-3">
+<img class="size-10 rounded-full border border-white/10" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbLbd3ZE-t9u521rzeDwFLQYCsQ9hOsRqR7Ek32O6R-i6XahH2YCpgvIiL7x38mZAfY09AvVjCVuOlwDuaJycR-qz-L0rVn7dJqD_aHdvrt9sZ6RelDljg-mfGxPpO2bCNomx6-QyNSt82xYfshcdfwEeiGRD817GUL6ANy3g9_iwVaCRyODu5Sn71f_BrUGPKPXNgHYVkeVMrJjnk964qZfh-ktkuKmyfcczXxbWj0inDz9qJOUY0pQLy_vXnLh_qeH_bHnt8dg"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Scrollable Body -->
+<div class="flex-1 overflow-y-auto px-8 py-10 scrollbar-hide">
+<!-- Stats & Title Section -->
+<div class="flex flex-wrap items-end justify-between gap-6 mb-12 max-w-screen-2xl mx-auto">
+<div class="flex flex-col gap-2">
+<h2 class="text-4xl font-black tracking-tight text-white">Download History</h2>
+<p class="text-on-surface-variant text-base">Your private archive of high-fidelity media.</p>
+</div>
+<div class="flex gap-4">
+<div class="glass-panel p-5 rounded-3xl min-w-[160px] border border-white/5">
+<p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Total Data</p>
+<p class="text-2xl font-black text-accent-cyan">1.4 TB</p>
+</div>
+<div class="glass-panel p-5 rounded-3xl min-w-[160px] border border-white/5">
+<p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Archive Size</p>
+<p class="text-2xl font-black text-accent-violet">342 Items</p>
+</div>
+</div>
+</div>
+<!-- Grid of Media Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8 max-w-screen-2xl mx-auto">
+<!-- Card 1 -->
+<div class="media-card group flex flex-col gap-4">
+<div class="relative aspect-video rounded-3xl overflow-hidden custom-shadow border border-white/5 bg-surface-container">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Cyberpunk city visuals" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3ZxVQE-H4g8IbCjKutN5OnvWoW4NSx1tbq8kKnweBgyo-yqhu0bJHmS55VgZU_1fjhY1CC06tavrUY6w22vbZyf9o_4avImfBGnmyRm0JmgGAhEfVGjyhXKm3b6jtqNyj0WEaI6v556Bec9yNHarv3UmbkV1xP9WDsLJ-0DL8WqfmsP6U8A-0wqvV1Y8xKPwGONumft-X6nabkkDwJhp-B65Iq0_vDyDlAMuTt8G1W9y_Qh1rFwNbvcLWgv9nUaqq1rjrPiNwGw')"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+<button class="size-14 rounded-full bg-accent-cyan text-on-primary flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 rounded-full glass-panel text-[10px] font-black text-white">4K UHD</span>
+<span class="px-3 py-1 rounded-full bg-accent-cyan/80 text-on-primary text-[10px] font-black uppercase tracking-tighter">Video</span>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-full glass-panel flex items-center justify-center hover:bg-white/20">
+<span class="material-symbols-outlined text-white text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="text-white font-bold truncate">Neon Pulse: Eternal Nights</h3>
+<p class="text-on-surface-variant text-xs truncate">Soundscape &amp; Visuals • 42 mins</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] font-medium text-accent-cyan">14.2 GB • 2 hours ago</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">folder_open</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">share</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="media-card group flex flex-col gap-4">
+<div class="relative aspect-video rounded-3xl overflow-hidden custom-shadow border border-white/5 bg-surface-container">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Fluid violet waves" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCoyqf9ovsQ5u14THmlqBq0TA_03LhYUH0rGw5wD2-X55OpesG1-j_6eOwOIHX7-NOE4EdBCgyZv0rgZUGbEnCMerrx21ObuzVuvDQWur_9lktzvYOoQlaiF-RlRhztdVfW5Qalc2mpUATyvFBbwcmKxxh2-8YhsBciYniIFkqn5eXsvjQVeELItwR8iuIXGhXdxkoXs7SDhTShKMKrBTgGqIankO2ibkHa6jQI_YTjjsA5GVKZtLatdRx_LSiJN7OG72C4ANcU5A')"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="size-14 rounded-full bg-accent-violet text-white flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 rounded-full glass-panel text-[10px] font-black text-white">Lossless</span>
+<span class="px-3 py-1 rounded-full bg-accent-violet/80 text-white text-[10px] font-black uppercase tracking-tighter">Audio</span>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-full glass-panel flex items-center justify-center hover:bg-white/20">
+<span class="material-symbols-outlined text-white text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="text-white font-bold truncate">Midnight Frequency LP</h3>
+<p class="text-on-surface-variant text-xs truncate">Various Artists • 1.2 hours</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] font-medium text-accent-cyan">840 MB • Oct 24, 2023</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">folder_open</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">share</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="media-card group flex flex-col gap-4">
+<div class="relative aspect-video rounded-3xl overflow-hidden custom-shadow border border-white/5 bg-surface-container">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Synthesizer studio shot" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDDTQSVTPvK0XFq8xCy9I3RshCtej8rrQ3lHPIHHr8_etRUqyl14o6rsilQyNQ47EnJWC3KUMljh7dVGKAnZWz_CMrls1HE1fO7HDzvbam6k1_bPKz0gHoi0V7uibnnEMLK9LItSGb9IW9JAwUgFmFckdnolynPGgNqyGwgnmKIZyty-tqC9NQhmJx0yM8aenGL4JtMAwGUtYNESnKnbgz6DGZkz4GTHnhz3OgveeVWet72_gUXf2aWA1DtQGAQhxXlk4lrCXwM7Q')"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="size-14 rounded-full bg-accent-cyan text-on-primary flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 rounded-full glass-panel text-[10px] font-black text-white">8K HDR</span>
+<span class="px-3 py-1 rounded-full bg-accent-cyan/80 text-on-primary text-[10px] font-black uppercase tracking-tighter">Video</span>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-full glass-panel flex items-center justify-center hover:bg-white/20">
+<span class="material-symbols-outlined text-white text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="text-white font-bold truncate">Synthesizer Masterclass</h3>
+<p class="text-on-surface-variant text-xs truncate">Studio Sessions • 3h 15m</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] font-medium text-accent-cyan">42.8 GB • Oct 22, 2023</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">folder_open</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">share</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="media-card group flex flex-col gap-4">
+<div class="relative aspect-video rounded-3xl overflow-hidden custom-shadow border border-white/5 bg-surface-container">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Neural HUD visuals" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCK95DgzsPNOrFMkq8_PMEzvMMdGZ6GFhGaIpAwQ9pS_1FJ4u2FZJdD3yqhviK3oVD52Jjk8BnJ4uLtb9wsKA8fnDWyFA1RZlg8VE7DjR0-7dVaY507FAiS8PI1SStgLQk_vPePivzCDfeDfo_fO2-uAaE-L9wTjr6eYApkrXKJ6A4CuScK4_lRSG-BONZwhAasPohYmInFNbE4Arzkq44lJ0zPq0CvwoAFbcdskRF16BOHMyzCpfQco1k0drm1wdesXC2nkC74-w')"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="size-14 rounded-full bg-accent-violet text-white flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 rounded-full glass-panel text-[10px] font-black text-white">Mixed</span>
+<span class="px-3 py-1 rounded-full bg-accent-violet/80 text-white text-[10px] font-black uppercase tracking-tighter">Collection</span>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-full glass-panel flex items-center justify-center hover:bg-white/20">
+<span class="material-symbols-outlined text-white text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="text-white font-bold truncate">Neural Assets Bundle</h3>
+<p class="text-on-surface-variant text-xs truncate">Archive Vol. 4 • 218 Files</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] font-medium text-accent-cyan">156 GB • Oct 20, 2023</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">folder_open</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">share</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="media-card group flex flex-col gap-4">
+<div class="relative aspect-video rounded-3xl overflow-hidden custom-shadow border border-white/5 bg-surface-container">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Mountain nebula sky" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBLiU1yydS69vSjNNOXl3IhmftpRdO4gWFOF0TMGczeHiyk7SAES2sWAnCdrK9o601v5e4GZMSGZeOEViwBgPvwm5Ea1n64CNk0leSWUzA5BMVKRjI5w4zuLnx6M7qf6eJ8h4xOsaArHz56i3fuLzvBJNd6oClKQW5Y6BrrnOnO08gG3cZtzsMLL8Qf58sTPRLwxxJIuCAI7HKap3G6h9QDcGZCZgGlR0Jx20I_wCOBMyZHl6j4CIskt2wWAej7bYEbDIn-AEmjuA')"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="size-14 rounded-full bg-accent-cyan text-on-primary flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 rounded-full glass-panel text-[10px] font-black text-white">Hi-Res</span>
+<span class="px-3 py-1 rounded-full bg-accent-cyan/80 text-on-primary text-[10px] font-black uppercase tracking-tighter">Audio</span>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 rounded-full glass-panel flex items-center justify-center hover:bg-white/20">
+<span class="material-symbols-outlined text-white text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="text-white font-bold truncate">Ambient Horizons</h3>
+<p class="text-on-surface-variant text-xs truncate">Solstice Dreams • 45 mins</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] font-medium text-accent-cyan">1.1 GB • Oct 18, 2023</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">folder_open</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-white">share</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="media-card group flex flex-col gap-4">
+<div class="relative aspect-video rounded-3xl overflow-hidden custom-shadow border border-white/5 bg-surface-container">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Sports car desert run" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCKE9VEonflXqSHpeTWMxiZTLeegvQFGQ_IA94C7o2wiHt2IG_fCKNnhYMWlpnqgsMBUihyHKxsgl4Ngvlw8neAje-dT1DP3hcRSECZQ-wL_BX42PQF-diYvNq7F8OFL0mPBeVs2bjdZKkObPDd1iaOgtvZ0kjQpwu8WlDbhrL8UtDPpH_ZSvwsorXclW9OlU4EhJ2OawTqQ2nUxVWVIrL3z3JUMu4QmO81PPc9aLWq6O5ZELWi9C35Wk5RTAvOmjNs-L2kGHFt3Q')"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="size-14 rounded-full bg-accent-cyan text-on-primary flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 rounded-full glass-panel text-[10px] font-black text-white">4K Lossless</span>
+<span class="px-3 py-1 rounded-full bg-accent-cyan/80 text-on-primary text-[10px] font-black uppercase tracking-tighter">Video</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="text-white font-bold truncate">Velocity: Desert Run</h3>
+<p class="text-on-surface-variant text-xs truncate">Short Film • 12 mins</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] font-medium text-accent-cyan">5.4 GB • Oct 15, 2023</span>
+</div>
+</div>
+</div>
+<!-- Card 7 -->
+<div class="media-card group flex flex-col gap-4">
+<div class="relative aspect-video rounded-3xl overflow-hidden custom-shadow border border-white/5 bg-surface-container">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Vinyl record player" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAUkNB6V0tsJ8xa9jwAnRecThIoNXDhQmUgR4_jZNcRPT1eC40ZkiNu1_2AfgL5nImxmyBMW2G76Us5BAbvBNDj12tiaoUBJ6t0FgfHEV_ifQAaiazPknSnUatYbGnyDvsteolgEWUnK9OI_-Xtzq53-hN2wyxK9kL-v3y_3OFbh9zJvMdtaxYt0PmwQzevx33gqo6NoZeprvKf9RmimxnVW56NSMCZC-jWh_bna-aMrQa_L3mGXoR6qAXWS4iUHzP0-QfJwGd1yg')"></div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="size-14 rounded-full bg-accent-violet text-white flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="px-3 py-1 rounded-full glass-panel text-[10px] font-black text-white">Hi-Res</span>
+<span class="px-3 py-1 rounded-full bg-accent-violet/80 text-white text-[10px] font-black uppercase tracking-tighter">Audio</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="text-white font-bold truncate">Analog Memories</h3>
+<p class="text-on-surface-variant text-xs truncate">Vinyl Series • 1.5h</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] font-medium text-accent-cyan">1.8 GB • Oct 12, 2023</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Float Status Bar -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-3 rounded-full flex items-center gap-6 border border-white/10 custom-shadow animate-bounce-subtle">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-accent-cyan animate-pulse"></div>
+<span class="text-xs font-bold text-white">System Optimized</span>
+</div>
+<div class="w-[1px] h-4 bg-outline-variant"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-cyan text-lg">speed</span>
+<span class="text-xs font-medium">Download Engine: 1.2 Gbps</span>
+</div>
+</div>
+</main>
+<script>
+        // Simple interactivity for navigation buttons
+        const navButtons = document.querySelectorAll('header button, nav button');
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Ignore small icon buttons
+                if(btn.classList.contains('size-10')) return;
+
+                // Handle top level nav buttons and filter buttons
+                const siblingGroup = btn.parentElement.querySelectorAll('button');
+                siblingGroup.forEach(b => {
+                   b.classList.remove('bg-accent-cyan', 'text-on-primary');
+                   b.classList.add('hover:bg-surface-container', 'text-on-surface');
+                });
+                
+                btn.classList.add('bg-accent-cyan', 'text-on-primary');
+                btn.classList.remove('hover:bg-surface-container', 'text-on-surface');
+            });
+        });
+
+        // Search highlight effect
+        const searchInput = document.querySelector('input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-1', 'ring-accent-cyan');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-1', 'ring-accent-cyan');
+        });
+    </script>
+</body></html>

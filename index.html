@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fel7o</title>
+  <meta name="description" content="Fel7o — Download • Organize • Enjoy" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet" />
+
+  <!-- Tailwind CDN (dev only — vendor before production dist) -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="./shared/tailwind-config.js"></script>
+
+  <!-- Application styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- ★ Global atmospheric background — initialized once, never recreated -->
+  <script src="./shared/global-bg.js"></script>
+</head>
+<body>
+
+<!-- Background is provided by shared/global-bg.js (injected into <body> automatically) -->
+
+<!-- ═══════════════════════════════════════════════
+     TOAST NOTIFICATION
+═══════════════════════════════════════════════ -->
+<div id="toast" hidden class="toast-notification"></div>
+
+<!-- Persistent media engine — <video> plays audio AND video; src is swapped per track -->
+<video id="globalAudioEl" preload="auto" style="display:none;" playsinline></video>
+
+<!-- ═══════════════════════════════════════════════
+     TOOL STATUS BAR (ffmpeg / yt-dlp indicators)
+═══════════════════════════════════════════════ -->
+<div class="tool-status-bar">
+  <span id="ffmpegStatus" class="tool-status-chip"></span>
+  <span id="ytdlpStatus" class="tool-status-chip"></span>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     HEADER / NAVIGATION
+═══════════════════════════════════════════════ -->
+<header id="homeHeader" class="glass-panel flex flex-col sticky top-0 z-20">
+  <div class="px-8 py-4 flex items-center justify-between gap-6">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3 shrink-0">
+      <div class="size-10 rounded-full overflow-hidden border border-accent-cyan/20 bg-surface-container flex items-center justify-center" style="background:transparent;border:none;">
+        <img src="assets/logo.png" alt="Fel7o Logo" style="width:40px;height:40px;object-fit:contain;" />
+      </div>
+      <span style="font-size:20px; font-weight:700; letter-spacing:-0.02em; color:#fff; line-height:1;">FEL7O</span>
+    </div>
+
+    <!-- Nav pills -->
+    <nav class="flex items-center gap-2">
+      <button id="homeNavBtn" class="px-6 py-2.5 rounded-full bg-accent-cyan text-on-primary text-sm font-bold transition-all duration-300 animate-pulse-glow">
+        Home
+      </button>
+      <button id="historyBtn" class="px-6 py-2.5 rounded-full hover:bg-surface-container text-on-surface text-sm font-bold transition-all duration-300">
+        History
+      </button>
+    </nav>
+
+    <!-- ── HOME TOOLBAR (URL & Download) ── -->
+    <div id="homeToolbar" class="flex items-center gap-6 flex-1">
+      <div class="flex items-center gap-3 flex-1 max-w-2xl">
+        <div class="relative flex-1 group">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-accent-cyan transition-colors pointer-events-none">link</span>
+          <input
+            id="urlInput"
+            type="url"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Paste a YouTube URL..."
+            class="w-full bg-surface-container-high/50 border border-outline-variant/30 rounded-full py-2.5 pl-12 pr-4 text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-1 focus:ring-accent-cyan transition-all"
+          />
+        </div>
+        <button id="pasteBtn" class="px-4 py-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface text-sm font-bold hover:bg-surface-container-high transition-all duration-300 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">content_paste</span> Paste
+        </button>
+        <button id="clearBtn" class="size-9 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-all duration-300" title="Clear">
+          <span class="material-symbols-outlined text-sm">close</span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="mode-toggle-group">
+          <button id="modeMp3Btn" class="mode-btn active" data-mode="mp3">
+            <span class="material-symbols-outlined text-sm">graphic_eq</span> MP3
+          </button>
+          <button id="modeVideoBtn" class="mode-btn" data-mode="video">
+            <span class="material-symbols-outlined text-sm">movie</span> Video
+          </button>
+        </div>
+        <select id="qualitySelect" class="quality-select">
+          <option value="192">192 kbps</option>
+        </select>
+        <button id="addBtn" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-container to-secondary-container text-white text-sm font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all duration-300 flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">download</span> Download
+        </button>
+      </div>
+    </div>
+
+    <!-- ── HISTORY TOOLBAR (Search & Filters) ── -->
+    <div id="historyToolbar" hidden class="flex items-center gap-4 flex-1">
+      <div class="flex items-center gap-4 flex-1 max-w-2xl">
+        <div class="relative w-full group">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-accent-cyan transition-colors pointer-events-none">search</span>
+          <input id="historySearch" type="text" placeholder="Search in history..." class="w-full bg-surface-container-high/50 border-none rounded-full py-2.5 pl-12 pr-6 text-sm focus:ring-1 focus:ring-accent-cyan transition-all text-on-surface placeholder:text-on-surface-variant" />
+        </div>
+        <div id="historyFilters" class="flex items-center gap-2">
+          <button class="history-filter-btn px-4 py-2 rounded-full hover:bg-surface-container text-on-surface text-xs font-medium transition-colors" data-filter="all">All Media</button>
+          <button class="history-filter-btn px-4 py-2 rounded-full hover:bg-surface-container text-on-surface text-xs font-medium transition-colors" data-filter="video">Video</button>
+          <button class="history-filter-btn px-4 py-2 rounded-full hover:bg-surface-container text-on-surface text-xs font-medium transition-colors" data-filter="audio">Audio</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shared Right Controls -->
+    <div class="flex items-center gap-3 shrink-0">
+      <div class="w-px h-6 bg-outline-variant/50"></div>
+      <button id="settingsBtn" class="size-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-all duration-300" title="Settings">
+        <span class="material-symbols-outlined">settings</span>
+      </button>
+      <button id="aboutBtn" class="size-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-all duration-300" title="About">
+        <span class="material-symbols-outlined">info</span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════ -->
+<main id="homeScreen" class="pt-8 pb-24 md:pb-8 px-lg min-h-screen">
+  <div class="max-w-6xl mx-auto space-y-gutter">
+
+    <!-- URL Preview Card (shown/hidden by renderer) -->
+    <div id="urlPreviewSection" hidden class="preview-animate-in"></div>
+
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-end gap-md animate-fade-in-up">
+      <div>
+        <h1 class="font-display-lg text-headline-xl md:text-display-lg font-bold text-on-surface tracking-tight">Active Sessions</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage your high-fidelity music stream and downloads.</p>
+      </div>
+      <div class="flex gap-sm">
+        <button id="pauseAllBtn" class="px-md py-2 bg-surface-container-high border border-white/10 rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container-highest transition-all duration-300 flex items-center gap-2 active:scale-95">
+          <span class="material-symbols-outlined text-sm">pause</span> Pause All
+        </button>
+        <button id="resumeAllBtn" class="px-md py-2 bg-gradient-to-r from-primary-container to-secondary-container font-label-md text-label-md rounded-lg shadow-lg hover:brightness-110 active:scale-95 transition-all duration-300 flex items-center gap-2 text-white">
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">play_arrow</span> Resume All
+        </button>
+      </div>
+    </div>
+
+    <!-- ── STATS GRID ── -->
+    <div id="queueStats" class="grid grid-cols-1 md:grid-cols-3 gap-gutter animate-fade-in-up" style="animation-delay:0.1s;" hidden>
+
+      <!-- Download Speed card -->
+      <div class="liquid-card p-lg rounded-2xl group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,212,255,0.15)]">
+        <div class="flex justify-between items-start mb-4">
+          <div class="p-2 rounded-lg bg-primary-container/10">
+            <span class="material-symbols-outlined text-primary-container">speed</span>
+          </div>
+          <span id="queueStatTrend" class="font-caption text-caption text-primary bg-primary/10 px-2 py-0.5 rounded-full">+0%</span>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Download Speed</p>
+        <h2 class="font-display-xl text-headline-xl font-bold text-on-surface my-2">
+          <span id="queueStatSpeed">—</span>
+        </h2>
+        <div class="mt-2 text-body-sm text-on-surface-variant">
+          <span id="queueStatDownloading">0</span> active ·
+          <span id="queueStatWaiting">0</span> waiting
+        </div>
+      </div>
+
+      <!-- Completed Today card -->
+      <div class="liquid-card p-lg rounded-2xl group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,212,255,0.15)]">
+        <div class="flex justify-between items-start mb-4">
+          <div class="p-2 rounded-lg bg-secondary-container/10">
+            <span class="material-symbols-outlined text-secondary">cloud_done</span>
+          </div>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Completed Today</p>
+        <h2 class="font-display-xl text-headline-xl font-bold text-on-surface my-2">
+          <span id="queueStatCompleted">0</span>
+          <span class="text-body-md font-normal text-on-surface-variant">Tracks</span>
+        </h2>
+        <div id="queueStatThumbStack" class="mt-2 flex -space-x-2 items-center text-caption text-on-surface-variant">
+          <!-- populated by renderer -->
+        </div>
+        <div id="queueStatFailedLine" hidden class="mt-1 text-caption text-error"></div>
+      </div>
+
+      <!-- Active Queue card -->
+      <div class="liquid-card p-lg rounded-2xl group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,212,255,0.15)]">
+        <div class="flex justify-between items-start mb-4">
+          <div class="p-2 rounded-lg bg-tertiary-container/10">
+            <span class="material-symbols-outlined text-tertiary">pending</span>
+          </div>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Active Queue</p>
+        <h2 class="font-display-xl text-headline-xl font-bold text-on-surface my-2">
+          <span id="queueStatActiveTotal">0</span>
+          <span class="text-body-md font-normal text-on-surface-variant">Items</span>
+        </h2>
+        <div class="mt-2 font-body-sm text-body-sm text-on-surface-variant">
+          Overall: <span id="queueStatProgress" class="text-on-surface font-semibold">0%</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── DOWNLOAD QUEUE ── -->
+    <div class="space-y-md">
+      <h2 class="font-headline-lg text-headline-lg font-bold text-on-surface flex items-center gap-2 animate-fade-in-up" style="animation-delay:0.2s;">
+        Queue
+        <span id="queueCount" class="text-body-sm font-normal text-on-surface-variant bg-surface-container px-2 py-0.5 rounded border border-white/5">0 items</span>
+        <span class="text-body-sm font-normal text-on-surface-variant bg-surface-container px-2 py-0.5 rounded border border-white/5">Auto-Resume On</span>
+      </h2>
+      <div id="queueList" class="flex flex-col gap-sm animate-fade-in-up" style="animation-delay:0.3s;">
+        <div class="empty-state-card" style="max-width: 430px; margin: 1.5rem auto;">
+          <span class="material-symbols-outlined text-[42px] text-accent-cyan opacity-80 mb-1">download</span>
+          <h4 class="text-base font-bold text-white leading-snug">No downloads in the queue yet</h4>
+          <p class="text-xs text-on-surface-variant max-w-[300px] leading-relaxed">Paste a YouTube URL above to start your first download.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <div class="pt-xl border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-md animate-fade-in-up" style="animation-delay:0.4s;">
+      <p class="font-caption text-caption text-on-surface-variant">© 2026 Fel7o. Precision Engineered for Sonic Perfection.</p>
+      <div class="flex gap-lg">
+        <a href="#" class="font-caption text-caption text-on-surface-variant hover:text-primary transition-all duration-300">Privacy Policy</a>
+        <a href="#" class="font-caption text-caption text-on-surface-variant hover:text-primary transition-all duration-300">API Status</a>
+        <a href="#" class="font-caption text-caption text-on-surface-variant hover:text-primary transition-all duration-300">Contact Support</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HISTORY OVERLAY  (full-screen, hidden by default)
+═══════════════════════════════════════════════════════════════ -->
+<div id="historyOverlay" class="modal-overlay" hidden>
+
+  <div class="history-screen flex flex-col h-full">
+
+    <!-- 
+      THE HEADER IS GLOBAL AND PERSISTENT AT THE TOP OF THE APP.
+      History Overlay now only contains the content.
+    -->
+
+    <!-- History Body -->
+    <div class="flex-1 overflow-y-auto px-8 py-10 scrollbar-hide">
+
+      <!-- Stats / Header Wrapper (Stable CSS Grid) -->
+      <div class="history-hero-grid grid grid-cols-3 items-center gap-6 mb-12 max-w-screen-2xl mx-auto w-full">
+        <!-- Left Section: Title & Subtitle -->
+        <div class="hero-left justify-self-start flex flex-col gap-1 min-w-[220px] text-left">
+          <h2 class="text-3xl font-black tracking-tight text-white leading-tight">Download History</h2>
+          <p class="text-on-surface-variant text-sm">Your private archive of high-fidelity media.</p>
+        </div>
+        
+        <!-- Center Section: Adaptive Media Player (Polished focal point, constant dimensions) -->
+        <div class="justify-self-center w-full max-w-[520px]">
+          <div id="miniPlayer" class="amp-shell glass-panel rounded-3xl border border-white/[0.06] flex items-center gap-4 p-3.5 h-[90px] w-full shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1.5px_rgba(255,255,255,0.06)] transition-[opacity,transform,box-shadow] duration-200" style="opacity: 0.5;">
+            
+            <!-- Left Slot: Media Viewport (always 110px x 62px - 16:9 ratio) -->
+            <div class="relative w-[110px] h-[62px] rounded-2xl overflow-hidden border border-white/10 shadow-[0_4px_16px_rgba(0,0,0,0.4)] shrink-0 flex items-center justify-center bg-white/5">
+              
+              <!-- Audio Artwork (enlarged modestly) -->
+              <img id="miniPlayerArtwork" src="assets/logo.png" alt="Artwork" class="w-full h-full object-cover absolute transition-opacity duration-200" />
+              
+              <!-- Video Viewport (Cinema) -->
+              <div id="ampCinema" class="amp-cinema w-full h-full hidden absolute inset-0">
+                <img id="ampPoster" class="amp-poster w-full h-full object-cover absolute inset-0" src="assets/logo.png" alt="Poster" />
+                <div id="ampVideoSlot" class="amp-video-slot w-full h-full absolute inset-0"></div>
+              </div>
+            </div>
+
+            <!-- Right Slot: Info & Controls Column -->
+            <div id="ampControls" class="flex flex-col gap-1.5 flex-1 min-w-0">
+              <!-- Info & Controls Row -->
+              <div class="flex justify-between items-center gap-3">
+                <!-- Text Info -->
+                <div class="flex flex-col min-w-0 text-left flex-1" style="text-align:left;">
+                  <div class="flex items-center w-full min-w-0">
+                    <div class="mini-title-container flex-1 min-w-0">
+                      <h3 id="miniPlayerTitle" class="mini-title-text text-[13px] font-bold text-white truncate" style="margin:0;padding:0;" title="">No track playing</h3>
+                    </div>
+                    <!-- Equalizer -->
+                    <div id="miniEqualizer" class="flex items-end gap-[2px] h-2.5 shrink-0 ml-2 hidden">
+                      <div class="eq-bar w-[2px] bg-accent-cyan rounded-full"></div>
+                      <div class="eq-bar w-[2px] bg-accent-cyan rounded-full"></div>
+                      <div class="eq-bar w-[2px] bg-accent-cyan rounded-full"></div>
+                    </div>
+                  </div>
+                  <p id="miniPlayerArtist" class="text-[11px] text-on-surface-variant truncate" style="margin:0;padding:0;">Select a track below</p>
+                </div>
+
+                <!-- Media Buttons -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button id="miniPrevBtn" class="w-7.5 h-7.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-white transition-all disabled:opacity-30 disabled:pointer-events-none" title="Previous (P)" disabled>
+                    <span class="material-symbols-outlined text-[17px]">skip_previous</span>
+                  </button>
+                  <button id="miniPlayBtn" class="w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-r from-primary-container to-secondary-container text-white transition-all hover:scale-105 active:scale-95 shadow-md" title="Play/Pause (Space)" disabled>
+                    <span id="miniPlayIcon" class="material-symbols-outlined text-[19px]" style="font-variation-settings:'FILL' 1;">play_arrow</span>
+                  </button>
+                  <button id="miniNextBtn" class="w-7.5 h-7.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-white transition-all disabled:opacity-30 disabled:pointer-events-none" title="Next (N)" disabled>
+                    <span class="material-symbols-outlined text-[17px]">skip_next</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Progress & Speed/FS Controls Row -->
+              <div class="flex items-center gap-2.5 w-full">
+                <span id="miniCurrentTime" class="text-[10px] text-white/70 font-semibold font-mono shrink-0">00:00</span>
+                
+                <div id="miniProgressContainer" class="flex-1 h-[3.5px] rounded-full relative cursor-pointer group py-1">
+                  <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[3px] bg-white/10 rounded-full"></div>
+                  <div id="miniProgressBar" class="absolute left-0 top-1/2 -translate-y-1/2 h-[3px] bg-accent-cyan rounded-full shadow-[0_0_6px_var(--cyan)]" style="width:0%;"></div>
+                  <div id="miniProgressThumb" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity" style="left:0%;"></div>
+                </div>
+
+                <span id="miniTotalTime" class="text-[10px] text-white/70 font-semibold font-mono shrink-0">00:00</span>
+
+                <!-- Video Controls (Speed / Fullscreen) — only visible in video mode -->
+                <div id="miniVideoControls" class="flex items-center gap-1.5 hidden shrink-0">
+                  <div class="w-px h-3 bg-white/10"></div>
+                  <!-- Speed Dropdown -->
+                  <div class="relative inline-block" id="ampSpeedDropdown">
+                    <button id="ampSpeedBtn" class="bg-white/5 hover:bg-white/10 border border-white/10 rounded px-1.5 py-0.5 text-[9px] text-white/90 font-mono flex items-center gap-0.5 cursor-pointer transition-all">
+                      <span id="ampSpeedBtnLabel">1×</span>
+                      <span class="material-symbols-outlined text-[9px] transition-transform duration-200" id="ampSpeedArrow">expand_more</span>
+                    </button>
+                    <div id="ampSpeedMenu" class="hidden absolute bottom-full right-0 mb-2 w-16 bg-slate-950/90 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden shadow-2xl z-50">
+                      <div class="flex flex-col py-0.5">
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="0.5">0.5×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="0.75">0.75×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono font-bold" data-val="1">1×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="1.25">1.25×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="1.5">1.5×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="1.75">1.75×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="2">2×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="2.5">2.5×</button>
+                        <button class="amp-speed-opt px-2 py-0.5 text-left text-[9px] text-white/80 hover:bg-accent-cyan/15 hover:text-accent-cyan font-mono" data-val="3">3×</button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- FS Button -->
+                  <button id="ampFullscreenBtn" class="w-5 h-5 rounded flex items-center justify-center hover:bg-white/10 text-white transition-all" title="Fullscreen (F)">
+                    <span id="ampFullscreenIcon" class="material-symbols-outlined text-sm">fullscreen</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Section: Stats (Height matched to h-[90px] for consistent horizontal baseline) -->
+        <div class="justify-self-end flex gap-4 shrink-0">
+          <div class="glass-panel py-4 px-5 rounded-3xl min-w-[160px] h-[90px] border border-white/[0.05] flex flex-col justify-center">
+            <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Total Data</p>
+            <p id="historyTotalData" class="text-2xl font-black text-accent-cyan leading-none">—</p>
+          </div>
+          <div class="glass-panel py-4 px-5 rounded-3xl min-w-[160px] h-[90px] border border-white/[0.05] flex flex-col justify-center">
+            <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Archive Size</p>
+            <p id="historyArchiveSize" class="text-2xl font-black text-accent-violet leading-none">0 Items</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div id="historyList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8 max-w-screen-2xl mx-auto" style="transition:opacity 160ms ease; will-change:opacity;">
+        <!-- populated by renderHistory() -->
+      </div>
+
+    </div>
+
+    <!-- Float Status Bar -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-3 rounded-full flex items-center gap-6 border border-white/10 custom-shadow">
+      <div class="flex items-center gap-2">
+        <div class="size-2 rounded-full bg-accent-cyan animate-pulse"></div>
+        <span class="text-xs font-bold text-white">System Optimized</span>
+      </div>
+      <div class="w-[1px] h-4 bg-outline-variant"></div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-accent-cyan text-lg">speed</span>
+        <span id="historyEngineStatus" class="text-xs font-medium">Download Engine: 0 archived</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SETTINGS MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div id="settingsOverlay" class="modal-overlay" hidden>
+  <div class="modal-dialog settings-modal glass-panel" role="dialog" aria-modal="true" aria-label="Settings">
+
+    <!-- Glow accent -->
+    <div class="settings-modal-glow"></div>
+
+    <!-- Header -->
+    <div class="settings-modal-heading">
+      <div class="settings-modal-icon">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">settings</span>
+      </div>
+      <div>
+        <h2 class="text-xl font-black text-white">Settings</h2>
+        <p class="settings-modal-subtitle">Configure your download preferences</p>
+      </div>
+      <button id="closeSettings" class="ml-auto size-9 rounded-full flex items-center justify-center hover:bg-white/10 text-on-surface-variant transition-all" title="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Cards -->
+    <div class="settings-cards-grid">
+
+      <!-- Downloads card -->
+      <div class="settings-card">
+        <div class="settings-card-title">
+          <span class="settings-card-icon material-symbols-outlined">folder_open</span>
+          Downloads
+        </div>
+        <div class="setting-row">
+          <label class="setting-label">Save folder</label>
+          <div class="flex items-center gap-2 min-w-0">
+            <span id="folderPathLabel" class="setting-value-text truncate" style="max-width: 185px; display: inline-block;" title="Click Change to choose a different folder"></span>
+            <button id="chooseFolderBtn" class="setting-action-btn flex-shrink-0">Change…</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="concurrentInput">Concurrent downloads</label>
+          <input id="concurrentInput" type="number" min="1" max="10" class="setting-number-input" />
+        </div>
+      </div>
+
+      <!-- Audio card -->
+      <div class="settings-card">
+        <div class="settings-card-title">
+          <span class="settings-card-icon material-symbols-outlined">graphic_eq</span>
+          Audio
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="audioQualitySelect">Default audio quality</label>
+          <select id="audioQualitySelect" class="setting-select">
+            <option value="128">128 kbps</option>
+            <option value="192">192 kbps</option>
+            <option value="320">320 kbps</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="thumbSwitch">Embed thumbnail</label>
+          <div id="thumbSwitch" class="switch" data-on="0" role="switch" aria-checked="false" tabindex="0">
+            <div class="switch-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video card -->
+      <div class="settings-card">
+        <div class="settings-card-title">
+          <span class="settings-card-icon material-symbols-outlined">movie</span>
+          Video
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="videoQualitySelect">Default video quality</label>
+          <select id="videoQualitySelect" class="setting-select">
+            <option value="best">Best available</option>
+            <option value="2160">4K</option>
+            <option value="1440">1440p</option>
+            <option value="1080">1080p</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- General card -->
+      <div class="settings-card">
+        <div class="settings-card-title">
+          <span class="settings-card-icon material-symbols-outlined">tune</span>
+          General
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="autoPasteSwitch">Auto-paste from clipboard</label>
+          <div id="autoPasteSwitch" class="switch" data-on="0" role="switch" aria-checked="false" tabindex="0">
+            <div class="switch-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /settings-cards-grid -->
+  </div><!-- /modal-dialog -->
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ABOUT MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div id="aboutOverlay" class="modal-overlay" hidden>
+  <div class="modal-dialog about-modal glass-panel" role="dialog" aria-modal="true" aria-label="About">
+
+    <div class="about-modal-glow"></div>
+
+    <div class="settings-modal-heading">
+      <div class="settings-modal-icon is-violet">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">info</span>
+      </div>
+      <div>
+        <h2 class="text-xl font-black text-white">Fel7o</h2>
+        <p class="settings-modal-subtitle">Download • Organize • Enjoy</p>
+      </div>
+      <button id="closeAbout" class="ml-auto size-9 rounded-full flex items-center justify-center hover:bg-white/10 text-on-surface-variant transition-all" title="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="settings-cards-grid">
+      <div class="about-card about-card-brand" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+        <div style="width: 105px; height: 105px; border-radius: 24px; background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 20px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; margin: 8px auto 16px; filter: drop-shadow(0 4px 16px rgba(0, 212, 255, 0.12));">
+          <img src="assets/logo.png" alt="Fel7o Logo" style="width: 72px; height: 72px; object-fit: contain;" />
+        </div>
+        <div style="font-size:16px; font-weight:700; color:var(--on-surface); opacity:0.8; letter-spacing:0.5px; margin-bottom:16px;">Fel7o</div>
+        <p style="font-size:12px; color:var(--on-surface-variant); margin-bottom:4px;">Developed by</p>
+        <p style="font-size:15px; font-weight:600; color:white; margin-bottom:20px;">Ahmed Khaled Elfalah</p>
+        <p class="welcome-message" style="margin-bottom:8px; font-size:13px; color:var(--on-surface-variant);">Version 5.0.1</p>
+      </div>
+      <div class="about-card">
+        <div class="settings-card-title">
+          <span class="settings-card-icon material-symbols-outlined">link</span>
+          Developer Links
+        </div>
+        <div id="aboutLinks" class="welcome-links"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     WELCOME MODAL  (shown on first launch)
+═══════════════════════════════════════════════════════════════ -->
+<div id="welcomeOverlay" class="modal-overlay" hidden>
+  <div class="modal-dialog welcome-modal glass-panel" role="dialog" aria-modal="true" aria-label="Welcome">
+
+    <div class="welcome-modal-glow"></div>
+
+    <div class="welcome-card">
+      <div class="welcome-logo">
+        <img src="assets/logo.png" alt="Fel7o Logo" style="width:72px;height:72px;object-fit:contain;" />
+      </div>
+      <h2 class="welcome-title">Welcome to Fel7o</h2>
+      <p class="welcome-subtitle" style="font-size: 13px; font-weight: 500; color: var(--cyan); margin-top: -8px; margin-bottom: 12px; letter-spacing: 1px;">Download • Organize • Enjoy</p>
+      
+      <p class="welcome-message" style="margin-bottom: 20px;">
+        Thank you for using Fel7o.<br>
+        Stay up to date with the latest releases, features and announcements.
+      </p>
+
+      <div class="welcome-persistence" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; font-size: 13px; color: var(--on-surface-variant); cursor: pointer; user-select: none;">
+        <input type="checkbox" id="welcomeDontShowCheckbox" style="cursor: pointer; accent-color: var(--cyan);" />
+        <label for="welcomeDontShowCheckbox" style="cursor: pointer;">Don't show this again</label>
+      </div>
+
+      <div class="welcome-actions" style="display: flex; gap: 12px; width: 100%; justify-content: center;">
+        <button id="welcomeVisitBtn" class="btn-secondary" style="flex: 1; max-width: 140px;">Visit Website</button>
+        <button id="welcomeContinueBtn" class="btn-primary" style="flex: 1; max-width: 140px;">Continue</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PLAYLIST MANAGER MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div id="playlistOverlay" class="modal-overlay" hidden>
+  <div class="playlist-modal glass-panel" role="dialog" aria-modal="true" aria-label="Playlist Manager">
+
+    <!-- Header -->
+    <div class="playlist-modal-header">
+      <h2 class="text-xl font-black text-white flex items-center gap-2">
+        <span class="material-symbols-outlined text-accent-cyan" style="font-variation-settings:'FILL' 1;">queue_music</span>
+        Playlist Manager
+      </h2>
+      <button id="closePlaylist" class="size-9 rounded-full flex items-center justify-center hover:bg-white/10 text-on-surface-variant transition-all" title="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div id="playlistLoading" class="playlist-loading">
+      <span class="material-symbols-outlined animate-spin text-accent-cyan" style="font-size:32px;">progress_activity</span>
+      <p class="text-on-surface-variant">Loading playlist…</p>
+      <p id="playlistLoadingCount" class="text-caption text-on-surface-variant"></p>
+    </div>
+
+    <!-- Error state -->
+    <div id="playlistError" hidden class="playlist-error">
+      <span class="material-symbols-outlined text-error" style="font-size:32px;">error</span>
+      <p id="playlistErrorText" class="text-on-surface-variant">Could not load playlist</p>
+      <button id="playlistRetryBtn" class="btn-secondary mt-2">Retry</button>
+    </div>
+
+    <!-- Content -->
+    <div id="playlistContent" hidden class="playlist-content">
+
+      <!-- Summary + controls -->
+      <div class="playlist-summary">
+        <div>
+          <div id="playlistSummaryTitle" class="text-lg font-bold text-on-surface"></div>
+          <div id="playlistSummarySub" class="text-caption text-on-surface-variant"></div>
+        </div>
+        <div class="playlist-stats">
+          <div class="playlist-stat">
+            <span id="playlistStatCount" class="stat-value">0</span>
+            <span class="stat-label">Videos</span>
+          </div>
+          <div class="playlist-stat">
+            <span id="playlistStatSelected" class="stat-value">0</span>
+            <span class="stat-label">Selected</span>
+          </div>
+          <div class="playlist-stat">
+            <span id="playlistStatDuration" class="stat-value">—</span>
+            <span class="stat-label">Duration</span>
+          </div>
+          <div class="playlist-stat">
+            <span id="playlistStatSize" class="stat-value">—</span>
+            <span id="playlistStatSizeLabel" class="stat-label">Approx. Size</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search + selection controls -->
+      <div class="playlist-toolbar">
+        <div class="relative flex-1">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-sm">search</span>
+          <input id="playlistSearch" type="text" placeholder="Search videos…" class="playlist-search-input" />
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="playlistSelectAllBtn" class="btn-chip">Select All</button>
+          <button id="playlistDeselectAllBtn" class="btn-chip">Deselect All</button>
+          <button id="playlistInvertBtn" class="btn-chip">Invert</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <input id="playlistRangeFrom" type="number" min="1" placeholder="From" class="playlist-range-input" />
+          <span class="text-on-surface-variant text-sm">–</span>
+          <input id="playlistRangeTo" type="number" min="1" placeholder="To" class="playlist-range-input" />
+          <button id="playlistApplyRangeBtn" class="btn-chip">Apply</button>
+        </div>
+      </div>
+
+      <!-- Video list -->
+      <div id="playlistItems" class="playlist-items"></div>
+
+    </div>
+
+    <!-- Footer -->
+    <div id="playlistFooter" hidden class="playlist-footer">
+      <span id="playlistFooterInfo" class="text-sm text-on-surface-variant">0 videos selected</span>
+      <div class="flex gap-3">
+        <button id="playlistCancelBtn" class="btn-secondary">Cancel</button>
+        <button id="playlistConfirmBtn" class="btn-primary" disabled>Add to Queue</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MOBILE BOTTOM NAV (hidden on md+)
+═══════════════════════════════════════════════ -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container/90 backdrop-blur-xl border-t border-white/10 flex items-center justify-around z-50">
+  <button class="flex flex-col items-center text-primary active:scale-90 transition-all duration-300">
+    <span class="material-symbols-outlined fill-icon">home</span>
+    <span class="text-[10px] uppercase font-bold">Home</span>
+  </button>
+  <button id="historyBtnMobile" class="flex flex-col items-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-300">
+    <span class="material-symbols-outlined">history</span>
+    <span class="text-[10px] uppercase">History</span>
+  </button>
+  <div class="w-12 h-12 -mt-10 bg-primary-container rounded-full flex items-center justify-center shadow-lg text-on-primary active:scale-90 transition-all duration-300 cursor-pointer" id="addBtnMobile">
+    <span class="material-symbols-outlined">add</span>
+  </div>
+  <button class="flex flex-col items-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-300">
+    <span class="material-symbols-outlined">download_done</span>
+    <span class="text-[10px] uppercase">Library</span>
+  </button>
+  <button id="settingsBtnMobile" class="flex flex-col items-center text-on-surface-variant hover:text-on-surface active:scale-90 transition-all duration-300">
+    <span class="material-symbols-outlined">settings</span>
+    <span class="text-[10px] uppercase">Settings</span>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════ -->
+<script src="shared/shared-utils.js"></script>
+<script src="renderer.js"></script>
+</body>
+</html>
