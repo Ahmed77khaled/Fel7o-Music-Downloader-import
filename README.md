@@ -13,7 +13,7 @@
 
 A production-ready Electron desktop app for Windows that lets you **download YouTube videos and music**, manage a download queue, and play your media — all in one place.
 
-[📥 Download Installer](#installation) · [🚀 Run from Source](#development) · [📋 Changelog](CHANGELOG.md)
+[📥 Download Installer](https://github.com/Ahmed77khaled/Fel7o-Music-Downloader-import/releases/latest) · [🚀 Run from Source](#development) · [📋 Changelog](CHANGELOG.md)
 
 </div>
 
