@@ -55,7 +55,7 @@
       "preload.js",
       "renderer.js",
       "styles.css",
-      "*.html",
+      "index.html",
       "shared/**/*",
       "Fel7o.js",
       "assets/**/*",
