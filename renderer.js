@@ -1920,12 +1920,12 @@ function bindEvents() {
       const audioElement = audioEl();
       if (!audioElement) return;
 
-      switch (e.key) {
-        case ' ':
+      switch (e.code) {
+        case 'Space':
           e.preventDefault();
           el('miniPlayBtn').click();
           break;
-        case 'f': case 'F':
+        case 'KeyF':
           if (ampMode === 'video') { e.preventDefault(); toggleFullscreen(); }
           break;
         case 'ArrowLeft':
@@ -1946,27 +1946,25 @@ function bindEvents() {
           e.preventDefault();
           setVolume(ampVolume - 0.1);
           break;
-        case 'm': case 'M':
+        case 'KeyM':
           e.preventDefault();
           audioElement.muted = !audioElement.muted;
           break;
-        case 'n': case 'N':
+        case 'KeyN':
           e.preventDefault();
           el('miniNextBtn').click();
           break;
-        case 'p': case 'P':
+        case 'KeyP':
           e.preventDefault();
           el('miniPrevBtn').click();
           break;
-        case '>':
-          e.preventDefault();
-          stepSpeed(1);
+        case 'Period':
+          if (e.shiftKey) { e.preventDefault(); stepSpeed(1); }
           break;
-        case '<':
-          e.preventDefault();
-          stepSpeed(-1);
+        case 'Comma':
+          if (e.shiftKey) { e.preventDefault(); stepSpeed(-1); }
           break;
-        case 'r': case 'R':
+        case 'KeyR':
           e.preventDefault();
           setSpeed(1);
           break;
