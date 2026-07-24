@@ -218,7 +218,7 @@ function estimateVideoBytes(durationSecs) {
 }
 
 function historyKind(entry) {
-  if (entry.mode === 'audio') return 'audio';
+  if (entry.mode === 'mp3') return 'audio';
   if (entry.mode === 'video') return 'video';
   return entry.videoQuality ? 'video' : 'audio';
 }
